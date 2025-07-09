@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block title %}
+   Login
+{% endblock %}
+
+{% block content %}
+<form method="post" class="container">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="id_username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="id_username" name="username" value="{{ form.username.value|default:'' }}">
+        {% if form.username.errors %}
+            <div class="text-danger">{{ form.username.errors.0 }}</div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label for="id_password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="id_password" name="password">
+        {% if form.password.errors %}
+            <div class="text-danger">{{ form.password.errors.0 }}</div>
+        {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+    <a href="/accounts/password_reset" class="card-link">reset Password</a>
+</form>
+{% endblock  %}

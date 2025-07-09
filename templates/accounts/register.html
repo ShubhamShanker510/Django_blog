@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+   Register
+{% endblock %}
+
+{% block content %}
+<form method="post" class="container">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="id_username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="id_username" name="username" value="{{ form.username.value|default:'' }}">
+        {% if form.username.errors %}
+            <div class="text-danger">{{ form.username.errors.0 }}</div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label for="id_email" class="form-label">Email address</label>
+        <input type="email" class="form-control" id="id_email" name="email" value="{{ form.email.value|default:'' }}">
+        {% if form.email.errors %}
+            <div class="text-danger">{{ form.email.errors.0 }}</div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label for="id_password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="id_password" name="password">
+        {% if form.password.errors %}
+            <div class="text-danger">{{ form.password.errors.0 }}</div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label for="id_confirmPassword" class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" id="id_confirmPassword" name="confirmPassword">
+        {% if form.confirmPassword.errors %}
+            <div class="text-danger">{{ form.confirmPassword.errors.0 }}</div>
+        {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+    <a href="/accounts/login" class="card-link">Login Here</a>
+</form>
+{% endblock  %}

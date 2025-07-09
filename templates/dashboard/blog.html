@@ -1,0 +1,41 @@
+{% extends "dashboard_base.html" %}
+
+{% block content%}
+<main class="app-main">
+       <div class="card mb-4 container mt-2 p-2">
+                  <div class="card-header">
+                    <h3 class="card-title">Blogs</h3>
+                  </div>
+                  <!-- /.card-header -->
+                  <div class="card-body p-0">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th style="width: 10px">Id</th>
+                          <th>Title</th>
+                          <th>content</th>
+                          <th>created_at</th>
+                          <th>updated_at</th>
+                          <th style="width: 10px">author_id</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for blog in blogs %}
+                        <tr class="align-middle">
+                          <td>{{blog.id}}</td>
+                          <td>{{blog.title}}</td>
+                          <td>
+                            {{blog.content|truncatechars:50}}
+                          </td>
+                          <td>{{blog.created_at}}</td>
+                          <td>{{blog.updated_at}}</td>
+                          <td>{{blog.author_id}}</td>
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+      </main>
+      {%endblock%}

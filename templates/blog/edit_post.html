@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+   Edit Post
+{% endblock %}
+
+{% block content %}
+<form method="post" class="container">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="id_title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="id_title" name="title" value="{{ form.title.value|default:'' }}">
+        {% if form.title.errors %}
+            <div class="text-danger">{{ form.title.errors.0 }}</div>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label for="id_content" class="form-label">Content</label>
+        <textarea class="form-control" id="id_content" name="content" rows="5" >{{ form.content.value|default:'' }}</textarea>
+        {% if form.content.errors %}
+            <div class="text-danger">{{ form.content.errors.0 }}</div>
+        {% endif %}
+    </div>
+    <button type="submit" class="btn btn-primary">Update Post</button>
+</form>
+{% endblock  %}

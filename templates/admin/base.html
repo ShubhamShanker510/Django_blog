@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}My Admin{% endblock %}
+
+{% block branding %}
+  <a class="navbar-brand" href="#">My AdminLTE Admin</a>
+{% endblock %}
+
+{% block extrastyle %}
+  <!-- AdminLTE CSS -->
+  <link rel="stylesheet" href="{% static 'adminlte/assets/css/adminlte.css' %}">
+  <link rel="stylesheet" href="{% static 'adminlte/assets/vendor/fontawesome-free/css/all.min.css' %}">
+{% endblock %}
+
+{% block extrahead %}
+  <!-- Optional extra scripts -->
+{% endblock %}

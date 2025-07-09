@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}
+   {{ post.title }}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="card" style="width: 40rem; margin: 0 auto;">
+    <div class="card-body">
+      <h2 class="card-title">{{ post.title }}</h2>
+      <h6 class="card-subtitle mb-2 text-body-secondary">By {{ post.author.username }} </h6>
+      <p class="card-text">{{ post.content }}</p>
+      <a href="{% url 'blog:home' %}" class="btn btn-secondary">Back to Home</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
