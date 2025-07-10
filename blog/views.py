@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .forms import BlogForm, BlogForm1
-from .models import Post
+from .forms import BlogForm, BlogForm1, CreateCategoryForm
+from .models import Post, Category
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -17,9 +17,10 @@ def home(request):
     if not post:
         messages.info(request, "No posts found in this category.")
 
+    categorychoices= Category.objects.values_list('id', 'name')
     return render(request, 'blog/home.html', {
         'posts': post,
-        'categories': Post.CATEGORY_CHOICES,
+        'categories': categorychoices,
         'selected_category': category
     })
 
@@ -32,7 +33,6 @@ def post_detail(request, post_id):
         return redirect('blog:home')
     
     return render(request, 'blog/post_detail.html', {'post': post})
-
 
 #create a new post
 @login_required
@@ -49,7 +49,8 @@ def create_post(request):
             return redirect('blog:home') 
     else:
         form = BlogForm()
-    return render(request, 'blog/create_post.html', {'form': form})
+    categorychoices= Category.objects.values_list('id', 'name')
+    return render(request, 'blog/create_post.html', {'form': form, 'categorychoices': categorychoices})
 
 @login_required
 def Delete_post(request, post_id):
@@ -69,15 +70,16 @@ def Delete_post(request, post_id):
 def edit_post(request, post_id):
     post = Post.objects.get(id=post_id)
     if request.method == "POST":
-        form = BlogForm(request.POST, initial={'title': post.title, 'content': post.content})
+        form = BlogForm(request.POST, initial={'title': post.title, 'content': post.content, 'category': post.category})
         if form.is_valid():
             post.title = form.cleaned_data['title']
             post.content = form.cleaned_data['content']
             post.save()
             return redirect('blog:home')
     else:
-        form = BlogForm(initial={'title': post.title, 'content': post.content})
-    return render(request, 'blog/edit_post.html', {'form': form, 'post': post})
+        form = BlogForm(initial={'title': post.title, 'content': post.content, 'category': post.category})
+        categorychoices= Category.objects.values_list('id', 'name')
+    return render(request, 'blog/edit_post.html', {'form': form, 'post': post, 'categorychoices': categorychoices})
 
 #Show my posts
 @login_required
@@ -110,7 +112,8 @@ def dashboard_create_blog(request):
     else:
         form = BlogForm1()
 
-    return render(request, 'dashboard/blogform.html', {'form': form})
+    categorychoices= Category.objects.values_list('id', 'name')
+    return render(request, 'dashboard/blogform.html', {'form': form, 'categorychoices': categorychoices})
 
 @staff_member_required
 def dashboard_edit_blog(request, postid):
@@ -131,9 +134,10 @@ def dashboard_edit_blog(request, postid):
         else:
             messages.error(request, "Please correct the errors below.")
     else:
-        form = BlogForm1(initial={'title':post.title, 'content':post.content, 'author':post.author})        
-
-    return render(request, 'dashboard/editblogForm.html', {'form': form, 'post': post}) 
+        form = BlogForm1(initial={'title':post.title, 'content':post.content, 'author':post.author})
+            
+    categorychoices= Category.objects.values_list('id', 'name')
+    return render(request, 'dashboard/editblogForm.html', {'form': form, 'post': post, 'categorychoices': categorychoices}) 
 
 @staff_member_required
 def delete_post(request, postid):
@@ -141,3 +145,24 @@ def delete_post(request, postid):
     post.delete()
     messages.success(request, "Post deleted successfully.")
     return redirect('/dashboard/blogs/')
+
+
+@staff_member_required
+def dashboard_create_category(request):
+    if request.method=="POST":
+        form = CreateCategoryForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            created = Category.objects.get_or_create(name=name)
+            if created:
+                messages.success(request, "Category created successfully.")
+            else:
+                messages.info(request, "Category already exists.")
+            return redirect('/dashboard/categories/')
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = CreateCategoryForm()
+    
+    return render(request, 'dashboard/categoryform.html', {'form': form})
+    

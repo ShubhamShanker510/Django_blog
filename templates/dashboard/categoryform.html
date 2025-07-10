@@ -1,0 +1,39 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<main class="app-main">
+  <div class="card card-primary card-outline mb-4 container mt-2 p-2">
+
+    <div class="card-header">
+      <div class="card-title">Add New Category</div>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="card-body">
+
+        <!-- Category Name -->
+        <div class="mb-3">
+          <label for="id_name" class="form-label">Category Name</label>
+          <input
+            type="text"
+            class="form-control"
+            name="name"
+            id="id_name"
+            value="{{ form.name.value|default:'' }}"
+            placeholder="Enter category name"
+          />
+          {% if form.name.errors %}
+            <div class="text-danger mt-1">{{ form.name.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+      </div>
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Add Category</button>
+      </div>
+    </form>
+
+  </div>
+</main>
+{% endblock content %}

@@ -43,10 +43,13 @@
         <div class="mb-3">
           <label for="id_category" class="form-label">Category</label>
           <select class="form-select" name="category" id="id_category">
-            {% for value, label in form.fields.category.choices %}
-              <option value="{{ value }}"
-                {% if value|stringformat:"s" == form.category.value|stringformat:"s" %}selected{% endif %}
-              >{{ label }}</option>
+            <option value="">All Categories</option>
+            {% for value, label in categorychoices %}
+             <option value="{{ value }}"
+  {% if value|stringformat:"s" == form.category.value|stringformat:"s" or value == post.category.id %}selected{% endif %}
+>
+  {{ label }}
+</option>
             {% endfor %}
           </select>
         </div>

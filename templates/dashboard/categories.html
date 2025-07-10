@@ -2,9 +2,14 @@
 
 {% block content %}
 <main class="app-main">
+  <div class="container mt-2 p-2">
+    <a href="{% url 'dashboard_create_category' %}" style="color: aliceblue;"><button class="btn btn-primary">Create Category</button></a>
+  </div>
+  
   {% include "dashboard/filterform.html" %}
 
    <div class="card mb-4 container mt-2 p-2">
+    
                   <div class="card-header">
                     <h3 class="card-title">Blogs</h3>
                   </div>

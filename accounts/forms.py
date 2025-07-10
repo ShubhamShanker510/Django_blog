@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 class registrationForm(forms.ModelForm):
     username=forms.CharField(label="Username", min_length=5, required=True)
     email=forms.EmailField(label="Email", error_messages={"invalid":"Please enter valid EmailId"}, required=True)
-    password=forms.CharField(label="Password", widget=forms.PasswordInput, min_length=8, max_length=16, required=False)
-    confirmPassword=forms.CharField(label="Confirm Password", widget=forms.PasswordInput, min_length=8, max_length=16, required=False)
+    password=forms.CharField(label="Password", widget=forms.PasswordInput, required=False)
+    confirmPassword=forms.CharField(label="Confirm Password", widget=forms.PasswordInput, required=False)
 
     class Meta:
         model=User

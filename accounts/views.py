@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from blog.models import Post
 from blog.forms import BlogForm1
+from blog.models import Category
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
 # Create your views here.
@@ -207,8 +208,7 @@ def dashboard_categories_view(request):
     else:
         blogs = Post.objects.all().order_by('-created_at')
     
-    
-    categorychoices=form.fields['category'].choices
+    categorychoices= Category.objects.values_list('id', 'name')
     authorchoices=form
-    return render(request, 'dashboard/categories.html', {'blogs': blogs,'categorychoices': categorychoices, 'authorchoices': authorchoices, 'selected_category': category, 'selected_author': authorid})
+    return render(request, 'dashboard/categories.html', {'blogs': blogs, 'authorchoices': authorchoices,'categorychoices': categorychoices, 'selected_category': category, 'selected_author': authorid})
 
