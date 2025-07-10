@@ -1,0 +1,88 @@
+{% extends "dashboard_base.html" %}
+
+{% block content %}
+<main class="app-main">
+  <div class="card card-primary card-outline mb-4 container mt-2 p-2">
+
+    <div class="card-header">
+      <div class="card-title">Add New Blog</div>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="card-body">
+
+        <!-- Title -->
+        <div class="mb-3">
+          <label for="id_title" class="form-label">Title</label>
+          <input
+            type="text"
+            class="form-control"
+            name="title"
+            id="id_title"
+            value="{{ form.title.value|default:'' }}"
+            placeholder="Enter post title"
+          />
+          {% if form.title.errors %}
+            <div class="text-danger mt-1">{{ form.title.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Content -->
+        <div class="mb-3">
+          <label for="id_content" class="form-label">Content</label>
+          <textarea
+            class="form-control"
+            name="content"
+            id="id_content"
+            rows="5"
+            placeholder="Write your post content here..."
+          >{{ form.content.value|default:'' }}</textarea>
+          {% if form.content.errors %}
+            <div class="text-danger mt-1">{{ form.content.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Category -->
+        <div class="mb-3">
+          <label for="id_category" class="form-label">Category</label>
+          <select class="form-select" name="category" id="id_category">
+            <option value="">Select Category</option>
+            {% for value, label in form.fields.category.choices %}
+              <option value="{{ value }}"
+                {% if value|stringformat:"s" == form.category.value|stringformat:"s" %}selected{% endif %}
+              >{{ label }}</option>
+            {% endfor %}
+          </select>
+          {% if form.category.errors %}
+            <div class="text-danger mt-1">{{ form.category.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <!-- Author -->
+        <div class="mb-3">
+          <label for="id_author" class="form-label">Author</label>
+          <select class="form-select" name="author" id="id_author">
+            <option value="">Select Author</option>
+            {% for user in form.fields.author.queryset %}
+              <option value="{{ user.id }}"
+                {% if user.id|stringformat:"s" == form.author.value|stringformat:"s" %}selected{% endif %}
+              >{{ user.username }}</option>
+            {% endfor %}
+          </select>
+          {% if form.author.errors %}
+            <div class="text-danger mt-1">{{ form.author.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+    </form>
+
+  </div>
+</main>
+{% endblock content %}

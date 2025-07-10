@@ -5,6 +5,12 @@ from django.urls import path
 from .views import AdminLoginRedirectView
 
 class MyAdminSite(AdminSite):
+
+    def islogin(self, request, extra_context=None):
+        if request.user.is_authenticated:
+            return redirect('/dashboard/')
+        return super().login(request, extra_context)
+
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
@@ -12,4 +18,4 @@ class MyAdminSite(AdminSite):
         ]
         return custom_urls + urls
 
-custom_admin_site = MyAdminSite()
+custom_admin_site = MyAdminSite(name='myadmin')

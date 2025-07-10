@@ -21,6 +21,17 @@
             <div class="text-danger">{{ form.content.errors.0 }}</div>
         {% endif %}
     </div>
+    <div class="mb-3">
+        <label for="id_category" class="form-label">Category</label>
+        <select class="form-select" id="id_category" name="category">
+            {% for value, label in form.fields.category.choices %}
+                <option value="{{ value }}" {% if form.category.value == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+        </select>
+        {% if form.category.errors %}
+            <div class="text-danger">{{ form.category.errors.0 }}</div>
+        {% endif %}
+    </div>
     <button type="submit" class="btn btn-primary">Create Post</button>
 </form>
 {% endblock  %}

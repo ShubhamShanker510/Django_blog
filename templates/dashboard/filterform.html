@@ -1,0 +1,45 @@
+
+{% include 'dashboard/message.html' %}
+<div class="card card-primary card-outline mb-4 container mt-2 p-2">
+    <div class="card-header">
+      <div class="card-title">Search by Category and Author</div>
+    </div>
+
+    <form method="get">
+      <div class="card-body">
+
+        <!-- Category Dropdown -->
+        <div class="mb-3">
+          <label for="id_category" class="form-label">Category</label>
+          <select class="form-select" name="category" id="id_category">
+            <option value="">All Categories</option>
+            {% for value, label in categorychoices %}
+              <option value="{{ value }}"
+                {% if value == selected_category %}selected{% endif %}
+              >{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Author Dropdown -->
+        <div class="mb-3">
+          <label for="id_author" class="form-label">Author</label>
+          <select class="form-select" name="author" id="id_author">
+            <option value="">All Authors</option>
+            {% for user in authorchoices.fields.author.queryset %}
+              <option value="{{ user.id }}"
+                {% if user.id|stringformat:"s" == selected_author %}selected{% endif %}
+              >{{ user.username }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+      </div>
+
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Filter</button>
+        <a href="{% url 'dashboard_categories' %}" class="btn btn-secondary">Clear</a>
+      </div>
+    </form>
+
+  </div>
