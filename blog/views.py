@@ -41,6 +41,19 @@ def create_post(request):
         form = BlogForm()
     return render(request, 'blog/create_post.html', {'form': form})
 
+@login_required
+def Delete_post(request, post_id):
+    try:
+        post = Post.objects.get(id=post_id)
+        if post.author == request.user or request.user.is_staff:
+            post.delete()
+            messages.success(request, "Post deleted successfully.")
+            return redirect('blog:my_posts')
+        else:
+            messages.error(request, "You do not have permission to delete this post.")
+    except Post.DoesNotExist:
+        messages.error(request, "Post not found.")
+    return redirect('blog:my_posts')
 
 @login_required
 def edit_post(request, post_id):

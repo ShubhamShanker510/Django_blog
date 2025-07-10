@@ -9,4 +9,5 @@ urlpatterns = [
     path('post/<int:post_id>/', post_detail, name="post_detail"),
     path('edit/<int:post_id>/', edit_post, name="edit_post"),
     path('mypost/', my_posts, name="my_posts"),
+    path('delete/<int:post_id>/', Delete_post, name="delete_post"),
 ]

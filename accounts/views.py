@@ -61,7 +61,7 @@ def dashboard_blog_view(request):
 
 @staff_member_required
 def dashboard_user_view(request):
-    user=User.objects.all().order_by('-date_joined')
+    user=User.objects.filter(is_superuser=False).order_by('-date_joined')
     return render(request, 'dashboard/user.html', {'users': user})
 
 @staff_member_required
@@ -157,27 +157,26 @@ def dashboard_logout(request):
 
 @staff_member_required
 def edit_user(request, userid):
-    user=User.objects.get(id=userid)
-    if request.method=="POST":
-        form=registrationForm(request.POST, initial={
-            'username': user.username,
-            'email': user.email,
-            'password': user.password})
+    user = User.objects.get(id=userid)
+
+    if request.method == "POST":
+        form = registrationForm(request.POST, instance=user)
         if form.is_valid():
-            user.username = form.cleaned_data['username']
-            user.email = form.cleaned_data['email']
-            user.set_password(form.cleaned_data['password'])
+            user = form.save(commit=False)
+
+            # ✅ Set password only if provided
+            password = form.cleaned_data.get('password')
+            if password:
+                user.set_password(password)
+
             user.save()
             messages.success(request, "User updated successfully")
             return redirect('/dashboard/users')
         else:
             messages.error(request, "Something went wrong")
     else:
-        form=registrationForm(initial={
-            'username': user.username,
-            'email': user.email,
-            'password': user.password
-        })
+        form = registrationForm(instance=user)
+
     return render(request, 'dashboard/userform.html', {'form': form, 'user': user})
 
 @staff_member_required
