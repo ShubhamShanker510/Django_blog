@@ -6,6 +6,17 @@
 
 {% block content %}
 <div class="container mt-4">
+   <form method="get" action="{% url 'blog:home' %}" class="d-flex mb-3">
+              <select name="category" class="form-select me-2">
+                <option value="">All Categories</option>
+                {% for key, value in categories %}
+                  <option value="{{ key }}" {% if selected_category == key %}selected{% endif %}>
+                    {{ value }}
+                  </option>
+                {% endfor %}
+              </select>
+              <button type="submit" class="btn btn-outline-primary">Filter</button>
+            </form>
   <div class="row">
     {% for post in posts %}
       <div class="col-md-4 mb-4">
