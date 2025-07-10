@@ -9,9 +9,19 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 # all posts
 def home(request):
+    category=request.GET.get('category')
     post=Post.objects.all().order_by('-created_at')
-    return render(request, 'blog/home.html', {'posts': post})
 
+    if category:
+        post=post.filter(category=category).order_by('-created_at')
+    if not post:
+        messages.info(request, "No posts found in this category.")
+
+    return render(request, 'blog/home.html', {
+        'posts': post,
+        'categories': Post.CATEGORY_CHOICES,
+        'selected_category': category
+    })
 
 #show a single post
 def post_detail(request, post_id):
