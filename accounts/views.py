@@ -10,6 +10,7 @@ from blog.forms import DashboardBlogForm
 from blog.models import Category
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
+from django.core.paginator import Paginator
 # Create your views here.
 
 #User registration
@@ -70,9 +71,14 @@ def dashboard_blog_view(request):
         blog_qs=Post.objects.filter(category__id=selected_category)
 
     blog=blog_qs.order_by('-created_at')
+    paginator=Paginator(blog, 5)
+    page_number=request.GET.get('page')
+    page=paginator.get_page(page_number)
+    blogCount=blog_qs.count()
+
     form = DashboardBlogForm()
     category_choices = form.fields['category'].queryset
-    return render(request, 'dashboard/blog.html', {'blogs':blog, 'selected_title':selected_title, 'selected_category':selected_category, 'categories': category_choices,})
+    return render(request, 'dashboard/blog.html', {'blogs':page, 'page_obj':page,'blogCount':blogCount, 'selected_title':selected_title, 'selected_category':selected_category, 'categories': category_choices,})
 
 @staff_member_required
 def dashboard_user_view(request):
@@ -87,9 +93,15 @@ def dashboard_user_view(request):
         user_qs = user_qs.filter(email__icontains=selected_email)
 
     users = user_qs.order_by("-date_joined")
+    paginator=Paginator(users, 5)
+    page_number=request.GET.get('page')
+    page=paginator.get_page(page_number)
+    usercount=User.objects.all().count()
 
     return render(request, 'dashboard/user.html', {
-        'users': users,
+        'users': page,
+        'page_obj':page,
+        'usercount':usercount,
         'selected_username': selected_username,
         'selected_email': selected_email,
     })
@@ -196,10 +208,15 @@ def dashboard_categories_view(request):
         blogs = Post.objects.all().order_by('-created_at')
     else:
         blogs = Post.objects.all().order_by('-created_at')
+
+    paginator=Paginator(blogs, 5)
+    page_number=request.GET.get('page')
+    page_obj=paginator.get_page(page_number)
+    categoryCount=Post.objects.all().count()
     
     categorychoices= Category.objects.values_list('id', 'name')
     authorchoices=form
-    return render(request, 'dashboard/categories.html', {'blogs': blogs, 'authorchoices': authorchoices,'categorychoices': categorychoices, 'selected_category': category, 'selected_author': authorid})
+    return render(request, 'dashboard/categories.html', {'blogs': page_obj,'page_obj':page_obj, 'categoryCount': categoryCount, 'authorchoices': authorchoices,'categorychoices': categorychoices, 'selected_category': category, 'selected_author': authorid})
 
 @staff_member_required
 def dashboard_create_edit_user(request, user_id=None):

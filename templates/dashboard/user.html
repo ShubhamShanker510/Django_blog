@@ -53,5 +53,11 @@
                   </div>
                   <!-- /.card-body -->
                 </div>
+                 {% if usercount > 6 %}
+  <div class="container position-fixed bottom-0 start-50 translate-middle-y mb-4">
+    {% include 'dashboard/pagination.html' %}
+  </div>
+{% endif %}
+
       </main>
       {%endblock%}
