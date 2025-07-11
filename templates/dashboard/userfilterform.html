@@ -1,4 +1,4 @@
-<form method="get" class="container mb-3">
+<form method="get" class="container mb-3" id="filterForm">
   <div class="row align-items-end">
 
  
@@ -11,6 +11,7 @@
         name="username"
         value="{{ selected_username }}"
         placeholder="Search by username"
+        oninput="onSubmit()"
       />
     </div>
 
@@ -23,15 +24,26 @@
         name="email"
         value="{{ selected_email }}"
         placeholder="Search by email"
+        oninput="onSubmit()"
       />
     </div>
 
 
-    <div class="col-md-3">
+    <!-- <div class="col-md-3">
       <button type="submit" class="btn btn-primary mt-4 w-100">
         Search
       </button>
-    </div>
+    </div> -->
 
   </div>
 </form>
+
+<script>
+    let timeout = null;
+    function onSubmit(){
+        clearTimeout(timeout)
+        timeout=setTimeout(()=>{
+            document.getElementById('filterForm').submit();
+        },500)
+    }
+</script>

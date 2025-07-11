@@ -8,6 +8,8 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    class Meta:
+        db_table="Category"
 
 
 # Create your models here.
@@ -23,5 +25,6 @@ class Post(models.Model):
         return self.title
 
     class Meta:
-        ordering = ['-created_at']  
+        ordering = ['-created_at']
+        db_table="Blogs"
 

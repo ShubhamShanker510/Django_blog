@@ -50,7 +50,6 @@
         <div class="mb-3">
           <label for="id_category" class="form-label">Category</label>
           <select class="form-select" name="category" id="id_category">
-            <option value="">Select Category</option>
             {% for value, label in form.fields.category.choices %}
               <option value="{{ value }}"
                 {% if value|stringformat:"s" == form.category.value|stringformat:"s" %}selected{% endif %}

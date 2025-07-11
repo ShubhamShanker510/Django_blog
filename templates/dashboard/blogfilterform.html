@@ -1,8 +1,8 @@
-<form method="get" class="container mb-3">
+<form method="get" class="container mb-3"  id="filterForm">
   <div class="row align-items-end">
 
     <!-- Title Search -->
-    <div class="col-md-4">
+    <div class="col-md-5">
       <label for="id_title" class="form-label">Title</label>
       <input
         type="text"
@@ -11,13 +11,14 @@
         name="title"
         value="{{ selected_title }}"
         placeholder="Search by title"
+        oninput="submitForm()"
       />
     </div>
 
     <!-- Category Dropdown -->
-    <div class="col-md-4">
+    <div class="col-md-5">
       <label for="id_category" class="form-label">Category</label>
-      <select class="form-select" id="id_category" name="category">
+      <select class="form-select" id="id_category" name="category" oninput="submitForm()">
         <option value="">All Categories</option>
         {% for cat in categories %}
             <option value="{{ cat.id }}" {% if cat.id|stringformat:"s" == selected_category %}selected{% endif %}>
@@ -28,12 +29,22 @@
 
     </div>
 
-    <!-- Search Button -->
+    <!-- Search Button
     <div class="col-md-3">
       <button type="submit" class="btn btn-primary mt-4 w-100">
         Search
       </button>
-    </div>
+    </div> -->
 
   </div>
 </form>
+
+<script>
+     let timeout = null;
+  function submitForm() {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      document.getElementById('filterForm').submit();
+    }, 500);
+  }
+</script>

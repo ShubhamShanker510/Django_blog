@@ -1,10 +1,10 @@
-<form method="get" class="container mb-3">
+<form method="get" class="container mb-3" id="filterForm">
   <div class="row align-items-end">
 
     <!-- Category Dropdown -->
-    <div class="col-md-4">
+    <div class="col-md-6">
       <label for="id_category" class="form-label">Category</label>
-      <select class="form-select" name="category" id="id_category">
+      <select class="form-select" name="category" id="id_category" oninput="submitform()">
         <option value="">All Categories</option>
         {% for value, label in categorychoices %}
           <option value="{{ value }}" {% if value == selected_category %}selected{% endif %}>
@@ -15,9 +15,9 @@
     </div>
 
     <!-- Author Dropdown -->
-    <div class="col-md-4">
+    <div class="col-md-6">
       <label for="id_author" class="form-label">Author</label>
-      <select class="form-select" name="author" id="id_author">
+      <select class="form-select" name="author" id="id_author" oninput="submitform()">
         <option value="">All Authors</option>
         {% for user in authorchoices.fields.author.queryset %}
           <option value="{{ user.id }}" {% if user.id|stringformat:"s" == selected_author %}selected{% endif %}>
@@ -28,9 +28,19 @@
     </div>
 
     <!-- Filter Button -->
-    <div class="col-md-3">
+    <!-- <div class="col-md-3">
       <button type="submit" class="btn btn-primary mt-4 w-100">Filter</button>
-    </div>
+    </div> -->
 
   </div>
 </form>
+
+<script>
+  let timeout=null
+  function submitform(){
+    clearTimeout(timeout)
+    setTimeout(()=>{
+      timeout=document.getElementById('filterForm').submit()
+    },500)
+  }
+</script>

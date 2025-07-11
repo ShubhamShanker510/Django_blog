@@ -110,21 +110,27 @@ def delete_post(request, postid):
 @staff_member_required
 def dashboard_create_category(request):
     if request.method=="POST":
-        form = CreateCategoryForm(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            created = Category.objects.get_or_create(name=name)
-            if created:
-                messages.success(request, "Category created successfully.")
-            else:
-                messages.info(request, "Category already exists.")
-            return redirect('/dashboard/categories/')
-        else:
-            messages.error(request, "Please correct the errors below.")
-    else:
-        form = CreateCategoryForm()
+        names=request.POST.getlist("name")
+        created_any=False
+        already_exists=[]
+
+        for name in names:
+            name=name.strip()
+
+            if name:
+                category,created=Category.objects.get_or_create(name=name)
+                if created:
+                    created_any=True
+                else:
+                    already_exists.append(name)
+        if created_any:
+            messages.success(request, "New categories added successfully.")
+        if already_exists:
+            messages.info(request, f"These categories already exist: {', '.join(already_exists)}")
+
+        return redirect('/dashboard/categories/')
     
-    return render(request, 'dashboard/categoryform.html', {'form': form})
+    return render(request, 'dashboard/categoryform.html')
 
 @staff_member_required
 def dashboard_delete_category_view(request):
