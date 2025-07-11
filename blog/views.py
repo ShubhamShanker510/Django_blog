@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import BlogForm, BlogForm1, CreateCategoryForm
+from .forms import BlogForm, DashboardBlogForm, CreateCategoryForm
 from .models import Post, Category
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -34,23 +34,6 @@ def post_detail(request, post_id):
     
     return render(request, 'blog/post_detail.html', {'post': post})
 
-#create a new post
-@login_required
-def create_post(request):
-    if request.method == "POST":
-        form = BlogForm(request.POST)
-        if form.is_valid():
-            post = Post.objects.create(
-                title=form.cleaned_data['title'],
-                content=form.cleaned_data['content'],
-                category=form.cleaned_data['category'],
-                author=request.user
-            )
-            return redirect('blog:home') 
-    else:
-        form = BlogForm()
-    categorychoices= Category.objects.values_list('id', 'name')
-    return render(request, 'blog/create_post.html', {'form': form, 'categorychoices': categorychoices})
 
 @login_required
 def Delete_post(request, post_id):
@@ -66,20 +49,24 @@ def Delete_post(request, post_id):
         messages.error(request, "Post not found.")
     return redirect('blog:my_posts')
 
+#create and edit post
 @login_required
-def edit_post(request, post_id):
-    post = Post.objects.get(id=post_id)
-    if request.method == "POST":
-        form = BlogForm(request.POST, initial={'title': post.title, 'content': post.content, 'category': post.category})
+def create_and_edit_blog(request, post_id=None):
+    post=get_object_or_404(Post, id=post_id) if post_id else None
+    
+    if request.method=="POST":
+        form=BlogForm(request.POST, instance=post)
         if form.is_valid():
-            post.title = form.cleaned_data['title']
-            post.content = form.cleaned_data['content']
-            post.save()
+            new_post=form.save(commit=False)
+            new_post.author=request.user
+            new_post.save()
             return redirect('blog:home')
+
     else:
-        form = BlogForm(initial={'title': post.title, 'content': post.content, 'category': post.category})
-        categorychoices= Category.objects.values_list('id', 'name')
-    return render(request, 'blog/edit_post.html', {'form': form, 'post': post, 'categorychoices': categorychoices})
+        form = BlogForm(instance=post)
+    return render(request, 'blog/create_edit_post.html', {'post':post, 'form':form})
+
+
 
 #Show my posts
 @login_required
@@ -89,55 +76,31 @@ def my_posts(request):
     return render(request, 'blog/my_posts.html', {'posts': posts})
 
 @staff_member_required
-def dashboard_create_blog(request):
+def dashboard_create_edit_blog(request, post_id=None):
+    post=get_object_or_404(Post, id=post_id) if post_id else None
+
     if request.method=="POST":
-        form=BlogForm1(request.POST)
+        form=DashboardBlogForm(request.POST, instance=post)
         if form.is_valid():
-            title = form.cleaned_data['title']
-            content = form.cleaned_data['content']
-            category=form.cleaned_data['category']
-            author = form.cleaned_data['author']
-
-      
-            Post.objects.create(
-                title=title,
-                content=content,
-                category=category,
-                author=author
-            )
-            messages.success(request, "Blog created successfully.")
-            return redirect('/dashboard/blogs/')
-        else:
-            messages.error(request, "Please correct the errors below.")
-    else:
-        form = BlogForm1()
-
-    categorychoices= Category.objects.values_list('id', 'name')
-    return render(request, 'dashboard/blogform.html', {'form': form, 'categorychoices': categorychoices})
-
-@staff_member_required
-def dashboard_edit_blog(request, postid):
-    post=Post.objects.get(id=postid)
-    if request.method=="POST":
-        form=BlogForm1(request.POST, initial={'title':post.title, 'content':post.content, 'author':post.author})
-        if form.is_valid():
-          title = form.cleaned_data['title']
-          content = form.cleaned_data['content']
-          author = form.cleaned_data['author']
-
-          post.title=title
-          post.content=content
-          post.author=author 
-          post.save()
-          messages.success(request, "Blog updated successfully.")
-          return redirect('/dashboard/blogs/')
-        else:
-            messages.error(request, "Please correct the errors below.")
-    else:
-        form = BlogForm1(initial={'title':post.title, 'content':post.content, 'author':post.author})
+            new_post=form.save(commit=False)
+            new_post.author=request.user
+            new_post.save()
             
-    categorychoices= Category.objects.values_list('id', 'name')
-    return render(request, 'dashboard/editblogForm.html', {'form': form, 'post': post, 'categorychoices': categorychoices}) 
+            if post_id:
+                messages.success(request,"Blog updated successfully")
+            else:
+                messages.success(request, "Blog created successfully")
+
+            return redirect('/dashboard/blogs')
+        else:
+            messages.error("Something went wrong")
+    else:
+        form=DashboardBlogForm(instance=post)
+
+    return render(request, 'dashboard/create_edit_blog.html', {'form':form, 'post':post})
+
+
+
 
 @staff_member_required
 def delete_post(request, postid):
@@ -165,4 +128,19 @@ def dashboard_create_category(request):
         form = CreateCategoryForm()
     
     return render(request, 'dashboard/categoryform.html', {'form': form})
-    
+
+@staff_member_required
+def dashboard_delete_category_view(request):
+    categories = Category.objects.all()
+    return render(request, 'dashboard/deletecategory.html', {'categories': categories})  
+
+@staff_member_required
+def dashboard_delete_category(request, category_id):
+    try:
+        category = Category.objects.get(id=category_id)
+        category.delete()
+        messages.success(request, "Category deleted successfully.")
+        
+    except Category.DoesNotExist:
+        messages.error(request, "Category not found.")
+    return redirect('/dashboard/delete-category/')

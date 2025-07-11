@@ -10,30 +10,55 @@
 
     <form method="post">
       {% csrf_token %}
-      <div class="card-body">
+      <div class="card-body" id="input-container">
 
         <!-- Category Name -->
-        <div class="mb-3">
-          <label for="id_name" class="form-label">Category Name</label>
+        <div class="input mb-3">
+          <label class="form-label">Category Name</label>
           <input
             type="text"
             class="form-control"
             name="name"
-            id="id_name"
-            value="{{ form.name.value|default:'' }}"
             placeholder="Enter category name"
           />
-          {% if form.name.errors %}
-            <div class="text-danger mt-1">{{ form.name.errors.0 }}</div>
-          {% endif %}
         </div>
 
       </div>
       <div class="card-footer">
         <button type="submit" class="btn btn-primary">Add Category</button>
+        <button type="button" class="add btn btn-secondary">Add More</button>
       </div>
     </form>
 
   </div>
+
+  <script>
+    document.querySelector('.add').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      const container = document.getElementById('input-container');
+
+      const div = document.createElement('div');
+      div.classList.add('input', 'mb-3');
+
+
+      const label = document.createElement('label');
+      label.classList.add('form-label');
+      label.textContent = 'Category Name';
+
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.classList.add('form-control');
+      input.name = 'name';
+      input.placeholder = 'Enter another category name';
+
+
+      div.appendChild(label);
+      div.appendChild(input);
+
+
+      container.appendChild(div);
+    });
+  </script>
 </main>
 {% endblock content %}

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Category
+from .models import Post, Category
 
 CATEGORY_CHOICES = [
         ('Technology', 'Technology'),
@@ -14,37 +14,30 @@ CATEGORY_CHOICES = [
 
 
 
-class BlogForm(forms.Form):
-    title = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder': 'Enter post title'}))
-    content = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Write your post content here...'}), required=True)
-    category = forms.ModelChoiceField(
-    queryset=Category.objects.all(),
-    required=True,
-    empty_label="Select Category"
-)
+class BlogForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'category']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Enter post title'}),
+            'content': forms.Textarea(attrs={'placeholder': 'Write your post content here...'}),
+        }
 
-class BlogForm1(forms.Form):
-    title = forms.CharField(
-        max_length=100,
-        required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Enter post title'})
-    )
-    content = forms.CharField(
-        widget=forms.Textarea(attrs={'placeholder': 'Write your post content here...'}),
-        required=True
-    )
+class DashboardBlogForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content', 'category', 'author']
+        widgets = {
+            'title': forms.TextInput(attrs={'placeholder': 'Enter post title'}),
+            'content': forms.Textarea(attrs={'placeholder': 'Write your post content here...'}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'author': forms.Select(attrs={'class': 'form-select'}),
+        }
 
-    category = forms.ModelChoiceField(
-    queryset=Category.objects.all(),
-    required=True,
-    empty_label="Select Category"
-    )
-
-    author = forms.ModelChoiceField(
-        queryset=User.objects.filter(),
-        required=True,
-        empty_label="Select Author"
-    )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['category'].empty_label = "Select Category"
+        self.fields['author'].empty_label = "Select Author"
 
 class CreateCategoryForm(forms.ModelForm):
     class Meta:

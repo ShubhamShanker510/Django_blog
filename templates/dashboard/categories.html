@@ -3,7 +3,9 @@
 {% block content %}
 <main class="app-main">
   <div class="container mt-2 p-2">
+    {% include 'dashboard/message.html' %}
     <a href="{% url 'dashboard_create_category' %}" style="color: aliceblue;"><button class="btn btn-primary">Create Category</button></a>
+    <a href="{% url 'dashboard_delete_category_view' %}" style="color: aliceblue;"><button class="btn btn-danger">Delete Categories</button></a>
   </div>
   
   {% include "dashboard/filterform.html" %}

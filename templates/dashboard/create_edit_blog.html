@@ -5,7 +5,9 @@
   <div class="card card-primary card-outline mb-4 container mt-2 p-2">
 
     <div class="card-header">
-      <div class="card-title">Add New Blog</div>
+      <div class="card-title">
+        {% if post %}Edit{% else %}Add New{% endif %} Blog
+      </div>
     </div>
 
     <form method="post">
@@ -48,10 +50,10 @@
         <div class="mb-3">
           <label for="id_category" class="form-label">Category</label>
           <select class="form-select" name="category" id="id_category">
-            <option value="">All Categories</option>
-            {% for value, label in categorychoices %}
+            <option value="">Select Category</option>
+            {% for value, label in form.fields.category.choices %}
               <option value="{{ value }}"
-                {% if value == selected_category %}selected{% endif %}
+                {% if value|stringformat:"s" == form.category.value|stringformat:"s" %}selected{% endif %}
               >{{ label }}</option>
             {% endfor %}
           </select>
@@ -79,7 +81,9 @@
       </div>
 
       <div class="card-footer">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">
+          {% if post %}Update{% else %}Submit{% endif %}
+        </button>
       </div>
     </form>
 

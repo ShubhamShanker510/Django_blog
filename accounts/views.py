@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib import messages
 from .forms import registrationForm, loginForm
 from django.contrib.auth.models import User
@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from blog.models import Post
-from blog.forms import BlogForm1
+from blog.forms import DashboardBlogForm
 from blog.models import Category
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
@@ -86,23 +86,6 @@ def dashboard_profile_view(request):
         return render(request, 'dashboard/profile.html', {'user': user})
     
 
-@staff_member_required
-def dashboard_create_user(request):
-    if request.method=="POST":
-        form=registrationForm(request.POST)
-
-        if form.is_valid():
-            user=form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            messages.success(request, "User created successfully")
-            return redirect('/dashboard/users')
-        
-        else:
-            messages.error(request, "Something went wrong")
-    else:
-        form=registrationForm()
-    return render(request, 'dashboard/userform.html', {"form":form})
 
 #User login
 def login_view(request):
@@ -157,30 +140,6 @@ def dashboard_logout(request):
     return redirect('/admin/')
 
 @staff_member_required
-def edit_user(request, userid):
-    user = User.objects.get(id=userid)
-
-    if request.method == "POST":
-        form = registrationForm(request.POST, instance=user)
-        if form.is_valid():
-            user = form.save(commit=False)
-
-            # ✅ Set password only if provided
-            password = form.cleaned_data.get('password')
-            if password:
-                user.set_password(password)
-
-            user.save()
-            messages.success(request, "User updated successfully")
-            return redirect('/dashboard/users')
-        else:
-            messages.error(request, "Something went wrong")
-    else:
-        form = registrationForm(instance=user)
-
-    return render(request, 'dashboard/userform.html', {'form': form, 'user': user})
-
-@staff_member_required
 def delete_user(request,userid):
     user=User.objects.get(id=userid)
     user.delete()
@@ -212,3 +171,30 @@ def dashboard_categories_view(request):
     authorchoices=form
     return render(request, 'dashboard/categories.html', {'blogs': blogs, 'authorchoices': authorchoices,'categorychoices': categorychoices, 'selected_category': category, 'selected_author': authorid})
 
+@staff_member_required
+def dashboard_create_edit_user(request, user_id=None):
+    user=get_object_or_404(User, id=user_id) if user_id else None
+
+    if request.method=="POST":
+        form=registrationForm(request.POST, instance=user)
+
+        if form.is_valid():
+            new_user=form.save(commit=False)
+            new_password=form.cleaned_data.get('new_password')
+
+            if new_password:
+                new_user.set_password(new_password)
+
+            new_user.save()
+
+
+            if user_id:
+                messages.success(request,"User updated successfully")
+            else:
+                messages.success(request,"User created successfully")
+            return redirect('/dashboard/users/')
+        else:
+            messages.error(request,"Something went wrong")
+    else:
+        form=registrationForm(instance=user)
+    return render(request, 'dashboard/create_edit_user.html', {'form': form, 'user':user})
