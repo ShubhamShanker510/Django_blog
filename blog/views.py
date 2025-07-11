@@ -83,7 +83,6 @@ def dashboard_create_edit_blog(request, post_id=None):
         form=DashboardBlogForm(request.POST, instance=post)
         if form.is_valid():
             new_post=form.save(commit=False)
-            new_post.author=request.user
             new_post.save()
             
             if post_id:
@@ -98,8 +97,6 @@ def dashboard_create_edit_blog(request, post_id=None):
         form=DashboardBlogForm(instance=post)
 
     return render(request, 'dashboard/create_edit_blog.html', {'form':form, 'post':post})
-
-
 
 
 @staff_member_required

@@ -148,7 +148,7 @@ def delete_user(request,userid):
         
 @staff_member_required
 def dashboard_categories_view(request):
-    form=BlogForm1()
+    form=DashboardBlogForm()
     category = request.GET.get('category')
     authorid = request.GET.get('author')
     print("category:", category)

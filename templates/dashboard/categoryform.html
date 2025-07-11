@@ -1,4 +1,4 @@
-{% extends "dashboard_base.html" %}
+{% extends "layout/dashboard_base.html" %}
 
 {% block content %}
 <main class="app-main">
@@ -35,7 +35,7 @@
   <script>
     document.querySelector('.add').addEventListener('click', function(e) {
       e.preventDefault();
-      
+
       const container = document.getElementById('input-container');
 
       const div = document.createElement('div');
