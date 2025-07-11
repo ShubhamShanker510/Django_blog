@@ -1,0 +1,39 @@
+<form method="get" class="container mb-3">
+  <div class="row align-items-end">
+
+    <!-- Title Search -->
+    <div class="col-md-4">
+      <label for="id_title" class="form-label">Title</label>
+      <input
+        type="text"
+        class="form-control"
+        id="id_title"
+        name="title"
+        value="{{ selected_title }}"
+        placeholder="Search by title"
+      />
+    </div>
+
+    <!-- Category Dropdown -->
+    <div class="col-md-4">
+      <label for="id_category" class="form-label">Category</label>
+      <select class="form-select" id="id_category" name="category">
+        <option value="">All Categories</option>
+        {% for cat_id, cat_name in categories %}
+            <option value="{{ cat_id }}" {% if cat_id|stringformat:"s" == selected_category %}selected{% endif %}>
+            {{ cat_name }}
+            </option>
+        {% endfor %}
+        </select>
+
+    </div>
+
+    <!-- Search Button -->
+    <div class="col-md-3">
+      <button type="submit" class="btn btn-primary mt-4 w-100">
+        Search
+      </button>
+    </div>
+
+  </div>
+</form>

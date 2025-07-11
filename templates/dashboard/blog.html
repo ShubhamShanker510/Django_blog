@@ -4,7 +4,21 @@
 <main class="app-main">
   <div class="container mt-2 p-2">
     {% include 'dashboard/message.html' %}
-<a href="{% url 'dashboard_create_blog' %}" style="color: aliceblue;"><button class="btn btn-primary">Create Blog</button></a>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+  
+  <div>
+    <a href="{% url 'dashboard_create_blog' %}">
+      <button class="btn btn-primary">Create Blog</button>
+    </a>
+  </div>
+
+
+  <div>
+    {% include 'dashboard/blogfilterform.html' %}
+  </div>
+
+</div>
+
   </div>
        <div class="card mb-4 container mt-2 p-2">
                   <div class="card-header">

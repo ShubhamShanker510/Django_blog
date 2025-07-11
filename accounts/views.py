@@ -57,8 +57,21 @@ def adminlte_dashboard(request):
 
 @staff_member_required
 def dashboard_blog_view(request):
-    blog=Post.objects.all().order_by('-created_at')
-    return render(request, 'dashboard/blog.html', {'blogs':blog})
+
+    selected_title=request.GET.get('title','').strip()
+    selected_category=request.GET.get('category','')
+    blog_qs=Post.objects.all()
+
+    if selected_title and selected_category:
+        blog_qs = Post.objects.filter(title__icontains=selected_title, category__id=selected_category)
+    elif selected_title:
+        blog_qs=Post.objects.filter(title__icontains=selected_title)
+    elif selected_category:
+        blog_qs=Post.objects.filter(category__id=selected_category)
+
+    blog=blog_qs.order_by('-created_at')
+    categories = Post.objects.values_list('category__id', 'category__name').distinct()
+    return render(request, 'dashboard/blog.html', {'blogs':blog, 'selected_title':selected_title, 'selected_category':selected_category, 'categories': categories,})
 
 @staff_member_required
 def dashboard_user_view(request):
