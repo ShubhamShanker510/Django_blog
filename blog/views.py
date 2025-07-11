@@ -41,7 +41,7 @@ def Delete_post(request, post_id):
         post = Post.objects.get(id=post_id)
         if post.author == request.user or request.user.is_staff:
             post.delete()
-            messages.success(request, "Post deleted successfully.")
+            messages.warning(request, "Post deleted successfully.")
             return redirect('blog:my_posts')
         else:
             messages.error(request, "You do not have permission to delete this post.")
@@ -60,6 +60,12 @@ def create_and_edit_blog(request, post_id=None):
             new_post=form.save(commit=False)
             new_post.author=request.user
             new_post.save()
+
+            if post_id:
+                messages.success(request,"Blog Updated successfully")
+            else:
+                messages.success(request, "blog created successfully")
+
             return redirect('blog:home')
 
     else:
@@ -103,7 +109,7 @@ def dashboard_create_edit_blog(request, post_id=None):
 def delete_post(request, postid):
     post = Post.objects.get(id=postid)
     post.delete()
-    messages.success(request, "Post deleted successfully.")
+    messages.WARNING(request, "Post deleted successfully.")
     return redirect('/dashboard/blogs/')
 
 

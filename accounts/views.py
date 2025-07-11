@@ -65,10 +65,13 @@ def dashboard_blog_view(request):
 
     if selected_title and selected_category:
         blog_qs = Post.objects.filter(title__icontains=selected_title, category__id=selected_category)
+        messages.info(request, f"filtered blog by title: {selected_title} and category: {selected_category}")
     elif selected_title:
         blog_qs=Post.objects.filter(title__icontains=selected_title)
+        messages.info(request, f"filtered blog by title: {selected_title}")
     elif selected_category:
         blog_qs=Post.objects.filter(category__id=selected_category)
+        messages.info(request, f"filtered blog by category: {selected_category}")
 
     blog=blog_qs.order_by('-created_at')
     paginator=Paginator(blog, 5)
@@ -85,12 +88,17 @@ def dashboard_user_view(request):
     selected_username = request.GET.get('username', '').strip()
     selected_email = request.GET.get('email', '').strip()
 
-    user_qs = User.objects.filter(is_superuser=False)
+    if request.user.is_superuser:
+        user_qs = User.objects.filter(is_superuser=False)
+    elif request.user.is_staff:
+         user_qs = User.objects.filter(is_superuser=False, is_staff=False)
 
     if selected_username:
         user_qs = user_qs.filter(username__icontains=selected_username)
+        messages.info(request, f"Filtered user by username: {selected_username}")
     if selected_email:
         user_qs = user_qs.filter(email__icontains=selected_email)
+        messages.info(request, f"Filtered user by: {selected_email}")
 
     users = user_qs.order_by("-date_joined")
     paginator=Paginator(users, 5)
@@ -197,13 +205,13 @@ def dashboard_categories_view(request):
     print("authordid:", authorid)
     if category and authorid:
         blogs = Post.objects.filter(category=category, author_id=authorid).order_by('-created_at')
-        messages.success(request, f"Filtered blogs by category: {category} and author: {authorid}")
+        messages.info(request, f"Filtered blogs by category: {category} and author: {authorid}")
     elif category:
         blogs=Post.objects.filter(category=category).order_by('created_at')
-        messages.success(request, f"Filtered blogs by category: {category}")
+        messages.info(request, f"Filtered blogs by category: {category}")
     elif authorid:
         blogs = Post.objects.filter(author_id=authorid).order_by('-created_at')
-        messages.success(request, f"Filtered blogs by author: {authorid}")
+        messages.info(request, f"Filtered blogs by author: {authorid}")
     elif category is None and authorid is None:
         blogs = Post.objects.all().order_by('-created_at')
     else:

@@ -6,6 +6,7 @@
 
 {% block content %}
 <div class="container mt-4">
+  {% include 'blog/message.html' %}
    <form method="get" action="{% url 'blog:home' %}" class="d-flex mb-3">
               <select name="category" class="form-select me-2">
                 <option value="">All Categories</option>
