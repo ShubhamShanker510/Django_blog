@@ -4,7 +4,19 @@
 <main class="app-main">
    <div class="container mt-2 p-2">
      {% include 'dashboard/message.html' %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+  
+  <div>
+    
 <a href="{% url 'dashboard_create_user' %}" style="color: aliceblue;"><button class="btn btn-primary">Create User</button></a>
+  </div>
+
+
+  <div>
+    {% include 'dashboard/userfilterform.html' %}
+  </div>
+
+</div>
   </div>
        <div class="card mb-4 container mt-2 p-2">
                   <div class="card-header">

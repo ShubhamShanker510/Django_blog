@@ -4,11 +4,24 @@
 <main class="app-main">
   <div class="container mt-2 p-2">
     {% include 'dashboard/message.html' %}
+   
+  </div>
+
+   <div class="d-flex justify-content-between align-items-center mb-3 container">
+  
+  <div>
     <a href="{% url 'dashboard_create_category' %}" style="color: aliceblue;"><button class="btn btn-primary">Create Category</button></a>
     <a href="{% url 'dashboard_delete_category_view' %}" style="color: aliceblue;"><button class="btn btn-danger">Delete Categories</button></a>
   </div>
+
+
+  <div>
+    {% include "dashboard/categoryfilterform.html" %}
+  </div>
+
+</div>
   
-  {% include "dashboard/filterform.html" %}
+ 
 
    <div class="card mb-4 container mt-2 p-2">
     

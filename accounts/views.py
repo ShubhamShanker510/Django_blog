@@ -70,13 +70,30 @@ def dashboard_blog_view(request):
         blog_qs=Post.objects.filter(category__id=selected_category)
 
     blog=blog_qs.order_by('-created_at')
-    categories = Post.objects.values_list('category__id', 'category__name').distinct()
-    return render(request, 'dashboard/blog.html', {'blogs':blog, 'selected_title':selected_title, 'selected_category':selected_category, 'categories': categories,})
+    form = DashboardBlogForm()
+    category_choices = form.fields['category'].queryset
+    return render(request, 'dashboard/blog.html', {'blogs':blog, 'selected_title':selected_title, 'selected_category':selected_category, 'categories': category_choices,})
 
 @staff_member_required
 def dashboard_user_view(request):
-    user=User.objects.filter(is_superuser=False).order_by('-date_joined')
-    return render(request, 'dashboard/user.html', {'users': user})
+    selected_username = request.GET.get('username', '').strip()
+    selected_email = request.GET.get('email', '').strip()
+
+    user_qs = User.objects.filter(is_superuser=False)
+
+    if selected_username:
+        user_qs = user_qs.filter(username__icontains=selected_username)
+    if selected_email:
+        user_qs = user_qs.filter(email__icontains=selected_email)
+
+    users = user_qs.order_by("-date_joined")
+
+    return render(request, 'dashboard/user.html', {
+        'users': users,
+        'selected_username': selected_username,
+        'selected_email': selected_email,
+    })
+
 
 @staff_member_required
 def dashboard_home_view(request):
