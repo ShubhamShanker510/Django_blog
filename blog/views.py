@@ -7,6 +7,9 @@ from django.contrib.admin.views.decorators import staff_member_required
 
 # Create your views here.
 
+def redirect_to_blogs(request):
+    return redirect('/blog/')
+
 # all posts
 def home(request):
     category=request.GET.get('category')

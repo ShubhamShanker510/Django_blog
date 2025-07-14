@@ -18,9 +18,10 @@ from django.contrib import admin
 from django.urls import path, include
 from accounts.views import  dashboard_blog_view, dashboard_user_view, dashboard_home_view, dashboard_profile_view, dashboard_logout,dashboard_create_edit_user, delete_user, dashboard_categories_view, clear_filter_search_category, clear_filter_search_user
 from accounts.admin import custom_admin_site
-from blog.views import dashboard_create_edit_blog, delete_post, dashboard_create_category, dashboard_delete_category, dashboard_delete_category_view, clear_filter_search_blog
+from blog.views import dashboard_create_edit_blog, delete_post, dashboard_create_category, dashboard_delete_category, dashboard_delete_category_view, redirect_to_blogs, clear_filter_search_blog
 urlpatterns = [
     path('admin/', custom_admin_site.urls), 
+    path('',redirect_to_blogs),
     path('dashboard/',dashboard_home_view, name='custom_admin_dashboard'),
     path('dashboard/blogs/', dashboard_blog_view, name='dashboard_blog'),
     path('dashboard/users/', dashboard_user_view, name='dashboard_user'),
