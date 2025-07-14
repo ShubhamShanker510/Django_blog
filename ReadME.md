@@ -74,7 +74,7 @@
 
 # Setup Instructions
 
-1. Python 3.x
+1. Python3
 
 2. pip 
 
@@ -88,7 +88,7 @@
     2. Navigate into the project directory
         cd blog_site
 
-    3. (Optional) Create and activate a virtual environment
+    3. Create and activate a virtual environment
         python -m venv env
         source env/bin/activate  
 
