@@ -153,3 +153,20 @@ def dashboard_delete_category(request, category_id):
     except Category.DoesNotExist:
         messages.error(request, "Category not found.")
     return redirect('/dashboard/delete-category/')
+
+@staff_member_required
+def clear_filter_search_blog(request):
+    selected_title=request.GET.get('title', '').strip()
+    selected_category=request.GET.get('category', '')
+
+    if not selected_category and not selected_title:
+        return redirect('/dashboard/blogs')
+    
+    try:
+        blogs=Post.objects.all()
+        messages.success(request,"All Blogs shown successfully")
+        return redirect('/dashboard/blogs')
+    except Post.DoesNotExist:
+        messages.error(request, "No blogs found")
+        
+    

@@ -135,8 +135,6 @@ def dashboard_profile_view(request):
         user = request.user
         return render(request, 'dashboard/profile.html', {'user': user})
     
-
-
 #User login
 def login_view(request):
     if request.user.is_authenticated:
@@ -166,7 +164,6 @@ def login_view(request):
 
     return render(request, 'accounts/login.html', {'form': form})
 
-
 # user profile
 @login_required
 def profile(request):
@@ -179,9 +176,6 @@ def Logout(request):
     logout(request)
     messages.success(request, "Logout successfully")
     return redirect('accounts:login')
-
-
-
 
 @staff_member_required
 def dashboard_logout(request):
@@ -253,3 +247,31 @@ def dashboard_create_edit_user(request, user_id=None):
     else:
         form=registrationForm(instance=user)
     return render(request, 'dashboard/create_edit_user.html', {'form': form, 'user':user})
+
+@staff_member_required
+def clear_filter_search_category(request):
+    selected_author=request.GET.get('author', '')
+    selected_category=request.GET.get('category', '')
+
+    if not selected_category and not selected_author:
+        return redirect('/dashboard/categories/')
+    try:
+        categories=Category.objects.all()
+        messages.success(request,"All categories shown successfully")
+        return redirect('/dashboard/categories/')
+    except Category.DoesNotExist:
+        messages.error(request, "No category found")
+
+@staff_member_required
+def clear_filter_search_user(request):
+    selected_user=request.GET.get('username','').strip()
+    selected_email=request.GET.get('email', '').strip()
+
+    if not selected_user and not selected_email:
+        return redirect('/dashboard/users/')
+    try:
+        users=User.objects.all()
+        messages.success(request,"All users shown successfully")
+        return redirect('/dashboard/users/')
+    except User.DoesNotExist:
+        messages.error(request, "No user found")

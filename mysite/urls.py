@@ -16,9 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from accounts.views import  dashboard_blog_view, dashboard_user_view, dashboard_home_view, dashboard_profile_view, dashboard_logout,dashboard_create_edit_user, delete_user, dashboard_categories_view, redirect_to_custom_dashboard
+from accounts.views import  dashboard_blog_view, dashboard_user_view, dashboard_home_view, dashboard_profile_view, dashboard_logout,dashboard_create_edit_user, delete_user, dashboard_categories_view, clear_filter_search_category, clear_filter_search_user
 from accounts.admin import custom_admin_site
-from blog.views import dashboard_create_edit_blog, delete_post, dashboard_create_category, dashboard_delete_category, dashboard_delete_category_view
+from blog.views import dashboard_create_edit_blog, delete_post, dashboard_create_category, dashboard_delete_category, dashboard_delete_category_view, clear_filter_search_blog
 urlpatterns = [
     path('admin/', custom_admin_site.urls), 
     path('dashboard/',dashboard_home_view, name='custom_admin_dashboard'),
@@ -28,6 +28,9 @@ urlpatterns = [
     path('dashboard/create-category/', dashboard_create_category, name='dashboard_create_category'),
     path('dashboard/delete-category/', dashboard_delete_category_view, name='dashboard_delete_category_view'),
     path('dashboard/delete-category/<int:category_id>/', dashboard_delete_category, name='dashboard_delete_category'),
+    path('dashboard/blogs/clear_blog_filter', clear_filter_search_blog, name="clear_filter_search_blog"),
+    path('dashboard/categories/clear_category_filter', clear_filter_search_category, name="clear_filter_search_category"),
+    path('dashboard/users/clear_user_filter', clear_filter_search_user, name='clear_filter_search_user'),
     path('dashboard/profile/', dashboard_profile_view, name='dashboard_profile'),
     path('dashboard/logout/', dashboard_logout, name='dashboard_logout'),
     path('dashboard/create-user/',dashboard_create_edit_user, name='dashboard_create_user'),

@@ -2,7 +2,7 @@
   <div class="row align-items-end">
 
     <!-- Category Dropdown -->
-    <div class="col-md-6">
+    <div class="col-md-4">
       <label for="id_category" class="form-label">Category</label>
       <select class="form-select" name="category" id="id_category" oninput="submitform()">
         <option value="">All Categories</option>
@@ -15,7 +15,7 @@
     </div>
 
     <!-- Author Dropdown -->
-    <div class="col-md-6">
+    <div class="col-md-4">
       <label for="id_author" class="form-label">Author</label>
       <select class="form-select" name="author" id="id_author" oninput="submitform()">
         <option value="">All Authors</option>
@@ -25,6 +25,11 @@
           </option>
         {% endfor %}
       </select>
+    </div>
+    <div class="col-md-3">
+      <a href="{% url 'clear_filter_search_category' %}" class="btn btn-secondary mt-4 w-100">
+        Clear
+      </a>
     </div>
 
     <!-- Filter Button -->
