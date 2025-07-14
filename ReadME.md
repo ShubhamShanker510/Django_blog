@@ -110,6 +110,8 @@
 # Access the Application
     Home Page: http://127.0.0.1:8000/blogs
 
+    accounts: http://127.0.0.1:8000/accounts/profile/
+
     Admin Panel: http://127.0.0.1:8000/admin/
                 
                 USERNAME:admin
